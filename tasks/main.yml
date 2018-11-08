@@ -29,12 +29,13 @@
     - /var/run/nginx-nr-agent/
 
 - name: Create logfile
-  file:
-    path: /var/log/nginx-nr-agent.log
+  copy:
+    content: ""
+    dest: /var/log/nginx-nr-agent.log
     owner: "{{ nginx_nra_user }}"
     group: "{{ nginx_nra_group }}"
     mode: 0644
-    state: touch
+    force: no
 
 
 - name: Create config file for nginx-nr-agent
