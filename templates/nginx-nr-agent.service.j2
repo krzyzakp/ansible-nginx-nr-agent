@@ -8,7 +8,8 @@ After=network-online.target
 [Service]
 User={{ nginx_nra_user }}
 Type=simple
-ExecStart=/usr/local/bin/nginx-nr-agent.py
+ExecStart=/usr/local/bin/nginx-nr-agent.py -c /etc/nginx-nr-agent/nginx-nr-agent.ini start
+ExecStop=/usr/local/bin/nginx-nr-agent.py -c /etc/nginx-nr-agent/nginx-nr-agent.ini stop
 TimeoutSec=30
 Restart=on-failure
 RestartSec=30

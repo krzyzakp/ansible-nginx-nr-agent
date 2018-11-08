@@ -1,11 +1,20 @@
 ---
 
+- name: Install required PIP packages
+  pip:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - docutils
+    - python-daemon
+
 - name: Fetch nginx-nr-agent.py
   get_url:
     url: https://raw.githubusercontent.com/nginxinc/new-relic-agent/master/nginx-nr-agent.py
     dest: /usr/local/bin/nginx-nr-agent.py
     owner: "{{ nginx_nra_user }}"
     group: "{{ nginx_nra_group }}"
+    mode: 0755
   notify: nginx-nr-agent restart
 
 - name: Create directories for nginx-nr-agent files
@@ -18,6 +27,15 @@
   with_items:
     - /etc/nginx-nr-agent/
     - /var/run/nginx-nr-agent/
+
+- name: Create logfile
+  file:
+    path: /var/log/nginx-nr-agent.log
+    owner: "{{ nginx_nra_user }}"
+    group: "{{ nginx_nra_group }}"
+    mode: 0644
+    state: touch
+
 
 - name: Create config file for nginx-nr-agent
   template:
@@ -37,6 +55,7 @@
     mode: 0644
   become: true
   when: "ansible_service_mgr == 'systemd'"
+  notify: nginx-nr-agent restart
 
 - name: Create init script for non-systemd systems
   template:
@@ -47,6 +66,7 @@
     mode: 0755
   become: true
   when: "ansible_service_mgr != 'systemd'"
+  notify: nginx-nr-agent restart
 
 - name: Create nginx-nr-agent service
   service:
