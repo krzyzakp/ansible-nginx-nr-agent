@@ -1,0 +1,20 @@
+# {{ansible_managed}}
+[Unit]
+Description=Nginx NewRelic Agent
+After=network.target
+After=systemd-user-sessions.service
+After=network-online.target
+ 
+[Service]
+User={{ nginx_nra_user }}
+Type=simple
+ExecStart=/usr/local/bin/nginx-nr-agent.py
+TimeoutSec=30
+Restart=on-failure
+RestartSec=30
+StartLimitInterval=350
+StartLimitBurst=10
+ 
+[Install]
+WantedBy=multi-user.target
+

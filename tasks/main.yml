@@ -1,0 +1,55 @@
+---
+
+- name: Fetch nginx-nr-agent.py
+  get_url:
+    url: https://raw.githubusercontent.com/nginxinc/new-relic-agent/master/nginx-nr-agent.py
+    dest: /usr/local/bin/nginx-nr-agent.py
+    owner: "{{ nginx_nra_user }}"
+    group: "{{ nginx_nra_group }}"
+  notify: nginx-nr-agent restart
+
+- name: Create directories for nginx-nr-agent files
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ nginx_nra_user }}"
+    group: "{{ nginx_nra_group }}"
+    mode: 0755
+  with_items:
+    - /etc/nginx-nr-agent/
+    - /var/run/nginx-nr-agent/
+
+- name: Create config file for nginx-nr-agent
+  template:
+    src: nginx-nr-agent.ini.j2
+    dest: /etc/nginx-nr-agent/nginx-nr-agent.ini
+    owner: "{{ nginx_nra_user }}"
+    group: "{{ nginx_nra_group }}"
+    mode: 0644
+  notify: nginx-nr-agent restart
+
+- name: Create systemd script for nginx-nr-agent
+  template:
+    src: nginx-nr-agent.service.j2
+    dest: /etc/systemd/system/nginx-nr-agent.service
+    owner: root
+    group: root
+    mode: 0644
+  become: true
+  when: "ansible_service_mgr != 'systemd'"
+
+- name: Create init script for non-systemd systems
+  template:
+    src: nginx-nr-agent.init.j2
+    dest: /etc/init.d/nginx-nr-agent
+    owner: root
+    group: root
+    mode: 0755
+  become: true
+  when: "ansible_service_mgr != 'systemd'"
+
+- name: Create nginx-nr-agent service
+  service:
+    name: nginx-nr-agent
+    state: started
+    enabled: yes

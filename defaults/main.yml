@@ -1,0 +1,6 @@
+---
+
+nginx_nra_user: www-data
+nginx_nra_group: www-data
+
+nginx_nra_license_key: ''

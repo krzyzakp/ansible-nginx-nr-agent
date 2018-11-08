@@ -1,0 +1,7 @@
+---
+
+- name: nginx-nr-agent restart
+  service:
+    name: nginx-nr-agent
+    state: restarted
+  become: true
