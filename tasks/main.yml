@@ -36,7 +36,7 @@
     group: root
     mode: 0644
   become: true
-  when: "ansible_service_mgr != 'systemd'"
+  when: "ansible_service_mgr == 'systemd'"
 
 - name: Create init script for non-systemd systems
   template:
