@@ -16,20 +16,20 @@ keys=consoleHandler,fileHandler
 keys=simpleFormatter
 
 [logger_root]
-level=DEBUG
+level={{ nginx_nra_level_logger }}
 handlers=consoleHandler,fileHandler
 
 [handler_consoleHandler]
 class=StreamHandler
-level=DEBUG
+level={{ nginx_nra_level_console_handler }}
 formatter=simpleFormatter
 args=(sys.stdout,)
 
 [handler_fileHandler]
 class=FileHandler
-level=DEBUG
+level={{ nginx_nra_level_file_handler }}
 formatter=simpleFormatter
-args=('/var/log/nginx-nr-agent.log','a',)
+args=('{{ nginx_nra_logfile }}','a',)
 
 [formatter_simpleFormatter]
 format=%(asctime)s %(name)s [%(levelname)s]: %(message)s

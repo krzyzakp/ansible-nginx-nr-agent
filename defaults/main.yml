@@ -6,3 +6,8 @@ nginx_nra_group: www-data
 nginx_nra_license_key: ''
 
 nginx_nra_name: ''
+
+nginx_nra_level_logger: DEBUG
+nginx_nra_level_console_handler: DEBUG
+nginx_nra_level_file_handler: DEBUG
+nginx_nra_logfile: /var/log/nginx-nr-agent.log
